@@ -2,12 +2,11 @@
 API v1 router configuration
 """
 from fastapi import APIRouter
-from backend.app.api.v1.endpoints import health, auth, projects, rfis
 
-router = APIRouter()
+from app.api.v1.endpoints import auth, users
 
-# Include all endpoint routers
-router.include_router(health.router, prefix="/health", tags=["Health"])
-router.include_router(auth.router, prefix="/auth", tags=["Authentication"])
-router.include_router(projects.router, prefix="/projects", tags=["Projects"])
-router.include_router(rfis.router, prefix="/rfis", tags=["RFIs"])
+api_router = APIRouter()
+
+# Include routers
+api_router.include_router(auth.router, prefix="/auth", tags=["authentication"])
+api_router.include_router(users.router, prefix="/users", tags=["users"])

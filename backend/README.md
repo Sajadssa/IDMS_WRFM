@@ -995,3 +995,42 @@ For issues or questions, please refer to the TODO.md file or create an issue in 
 
 **Last Updated**: 2025-10-31  
 **Version**: 0.5.0 (Backend 50% complete)
+
+
+###  User Management (Task 2.6)
+
+**CRUD Operations:**
+-  List users with pagination and filters
+-  Get user by ID
+-  Get current user profile
+-  Create user (Admin only)
+-  Update user (Self + Admin)
+-  Soft delete user (Admin only)
+-  Restore deleted user (Admin only)
+
+**Features:**
+- Advanced filtering (search, active status, superuser)
+- Password validation (8+ chars, uppercase, lowercase, digit)
+- Username uniqueness validation
+- Email uniqueness validation
+- Permission-based access control
+- Self-profile management
+- Soft delete mechanism
+
+**Endpoints:**
+\\\
+GET    /api/v1/users/          - List users (Admin)
+GET    /api/v1/users/me        - Current user
+GET    /api/v1/users/{id}      - Get user
+POST   /api/v1/users/          - Create user (Admin)
+PUT    /api/v1/users/{id}      - Update user
+DELETE /api/v1/users/{id}      - Soft delete (Admin)
+POST   /api/v1/users/{id}/restore - Restore user (Admin)
+\\\
+
+**Security:**
+- JWT authentication required
+- Role-based access control (RBAC)
+- Users can only view/edit their own profile
+- Admins have full access
+- Password hashing with bcrypt
