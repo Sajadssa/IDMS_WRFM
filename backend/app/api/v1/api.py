@@ -1,34 +1,13 @@
-"""
-API V1 Router
-Includes all endpoint routers
+﻿"""
+API v1 router configuration
 """
 from fastapi import APIRouter
+from backend.app.api.v1.endpoints import health, auth, projects, rfis
 
-from app.api.v1.endpoints import health, auth, projects, rfis
+router = APIRouter()
 
-api_router = APIRouter()
-
-# Include endpoint routers
-api_router.include_router(
-    health.router,
-    prefix="/health",
-    tags=["Health"]
-)
-
-api_router.include_router(
-    auth.router,
-    prefix="/auth",
-    tags=["Authentication"]
-)
-
-api_router.include_router(
-    projects.router,
-    prefix="/projects",
-    tags=["Projects"]
-)
-
-api_router.include_router(
-    rfis.router,
-    prefix="/rfis",
-    tags=["RFIs"]
-)
+# Include all endpoint routers
+router.include_router(health.router, prefix="/health", tags=["Health"])
+router.include_router(auth.router, prefix="/auth", tags=["Authentication"])
+router.include_router(projects.router, prefix="/projects", tags=["Projects"])
+router.include_router(rfis.router, prefix="/rfis", tags=["RFIs"])
