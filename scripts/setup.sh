@@ -1,178 +1,147 @@
 ﻿#!/bin/bash
+
 # ============================================
-# IDMS_WRFM Setup Script
-# Initializes development environment
+# IDMS WRFM - Setup Script
 # ============================================
 
 set -e  # Exit on error
 
-echo ""
-echo "   IDMS_WRFM Development Setup          "
-echo ""
-echo ""
-
-# Color codes
+# Colors
+RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
-RED='\033[0;31m'
+BLUE='\033[0;34m'
 CYAN='\033[0;36m'
-NC='\033[0m' # No Color
+NC='\033[0m'
 
-# ============================================
-# 1. Check Prerequisites
-# ============================================
-echo -e "${CYAN} Checking prerequisites...${NC}"
+# Helper Functions
+print_header() {
+    echo -e "\n${CYAN}============================================${NC}"
+    echo -e "${CYAN}$1${NC}"
+    echo -e "${CYAN}============================================${NC}\n"
+}
 
-# Check Docker
-if ! command -v docker &> /dev/null; then
-    echo -e "${RED}❌ Docker is not installed${NC}"
-    echo "Please install Docker Desktop from: https://www.docker.com/products/docker-desktop"
-    exit 1
-fi
-echo -e "${GREEN} Docker installed${NC}"
+print_step() {
+    echo -e "${BLUE} $1${NC}"
+}
 
-# Check Docker Compose
-if ! docker compose version &> /dev/null; then
-    echo -e "${RED} Docker Compose V2 is not installed${NC}"
-    exit 1
-fi
-echo -e "${GREEN} Docker Compose V2 installed${NC}"
+print_success() {
+    echo -e "${GREEN} $1${NC}"
+}
 
-# Check if Docker is running
-if ! docker info &> /dev/null; then
-    echo -e "${RED}❌ Docker is not running${NC}"
-    echo "Please start Docker Desktop"
-    exit 1
-fi
-echo -e "${GREEN}✅ Docker is running${NC}"
+print_warning() {
+    echo -e "${YELLOW}  $1${NC}"
+}
 
-# ============================================
-# 2. Create Directory Structure
-# ============================================
-echo -e "\n${CYAN} Creating directory structure...${NC}"
+print_error() {
+    echo -e "${RED}❌ $1${NC}"
+}
 
-directories=(
-    "backend/app/api/v1/endpoints"
-    "backend/app/core"
-    "backend/app/models"
-    "backend/app/schemas"
-    "backend/app/services"
-    "backend/app/utils"
-    "backend/tests"
-    "backend/alembic/versions"
-    "frontend/src"
-    "docs/WBS"
-    "docs/architecture"
-    "docs/api"
-    "scripts"
-    ".github/workflows"
-)
-
-for dir in "${directories[@]}"; do
-    mkdir -p "$dir"
-    echo -e "${GREEN}${NC} Created: $dir"
-done
-
-# ============================================
-# 3. Environment Setup
-# ============================================
-echo -e "\n${CYAN} Setting up environment...${NC}"
-
-if [ ! -f .env ]; then
-    if [ -f .env.example ]; then
-        cp .env.example .env
-        echo -e "${GREEN} Created .env from .env.example${NC}"
-        echo -e "${YELLOW}  Please edit .env and set your credentials${NC}"
+check_command() {
+    if command -v $1 &> /dev/null; then
+        print_success "$1 is installed"
+        return 0
     else
-        echo -e "${RED}❌ .env.example not found${NC}"
+        print_error "$1 is not installed"
+        return 1
+    fi
+}
+
+# ============================================
+# Main Setup
+# ============================================
+
+print_header "IDMS WRFM - Project Setup"
+
+# Check Prerequisites
+print_header "Checking Prerequisites"
+PREREQUISITES_OK=true
+
+print_step "Checking Python..."
+if check_command python3; then
+    python3 --version
+else
+    PREREQUISITES_OK=false
+fi
+
+print_step "Checking Docker..."
+if check_command docker; then
+    docker --version
+else
+    PREREQUISITES_OK=false
+fi
+
+print_step "Checking Docker Compose..."
+if check_command docker-compose; then
+    docker-compose --version
+else
+    PREREQUISITES_OK=false
+fi
+
+print_step "Checking Git..."
+if check_command git; then
+    git --version
+else
+    PREREQUISITES_OK=false
+fi
+
+if [ "$PREREQUISITES_OK" = false ]; then
+    print_error "Some prerequisites are missing"
+    exit 1
+fi
+
+# Environment Setup
+print_header "Setting Up Environment"
+
+print_step "Checking .env file..."
+if [ ! -f ".env" ]; then
+    if [ -f ".env.example" ]; then
+        cp .env.example .env
+        print_success ".env file created"
+    else
+        print_error ".env.example not found"
         exit 1
     fi
 else
-    echo -e "${YELLOW}⚠️  .env already exists, skipping...${NC}"
+    print_success ".env file exists"
 fi
 
-# ============================================
-# 4. Build Docker Images
-# ============================================
-echo -e "\n${CYAN} Building Docker images...${NC}"
+# Docker Services
+print_header "Starting Docker Services"
+docker-compose up -d
+sleep 5
+print_success "Docker services started"
 
-docker compose build --no-cache
-echo -e "${GREEN} Docker images built${NC}"
+# Python Environment
+print_header "Setting Up Python Environment"
 
-# ============================================
-# 5. Start Services
-# ============================================
-echo -e "\n${CYAN} Starting services...${NC}"
-
-docker compose up -d
-echo -e "${GREEN} Services started${NC}"
-
-# ============================================
-# 6. Wait for Services
-# ============================================
-echo -e "\n${CYAN} Waiting for services to be healthy...${NC}"
-
-# Wait for Postgres
-max_attempts=30
-attempt=0
-until docker compose exec -T postgres pg_isready -U idms_user &> /dev/null; do
-    attempt=$((attempt + 1))
-    if [ $attempt -ge $max_attempts ]; then
-        echo -e "${RED} Postgres failed to start${NC}"
-        docker compose logs postgres
-        exit 1
-    fi
-    echo -e "${YELLOW}Waiting for Postgres... ($attempt/$max_attempts)${NC}"
-    sleep 2
-done
-echo -e "${GREEN} Postgres is ready${NC}"
-
-# Wait for Redis
-attempt=0
-until docker compose exec -T redis redis-cli -a "${REDIS_PASSWORD:-idms_redis_password_2024}" ping &> /dev/null; do
-    attempt=$((attempt + 1))
-    if [ $attempt -ge $max_attempts ]; then
-        echo -e "${RED} Redis failed to start${NC}"
-        docker compose logs redis
-        exit 1
-    fi
-    echo -e "${YELLOW}Waiting for Redis... ($attempt/$max_attempts)${NC}"
-    sleep 2
-done
-echo -e "${GREEN}✅ Redis is ready${NC}"
-
-# ============================================
-# 7. Run Health Checks
-# ============================================
-echo -e "\n${CYAN} Running health checks...${NC}"
-
-if [ -f scripts/health_check.sh ]; then
-    bash scripts/health_check.sh
+if [ ! -d "venv" ]; then
+    python3 -m venv venv
+    print_success "Virtual environment created"
 else
-    echo -e "${YELLOW}  health_check.sh not found, skipping...${NC}"
+    print_warning "Virtual environment exists"
 fi
 
-# ============================================
-# 8. Display Summary
-# ============================================
-echo ""
-echo ""
-echo "         Setup Complete!               "
-echo ""
-echo ""
-echo -e "${GREEN} IDMS_WRFM is ready for development!${NC}"
-echo ""
-echo "Services:"
-echo -e "   Backend API:     ${CYAN}http://localhost:8000${NC}"
-echo -e "   API Docs:        ${CYAN}http://localhost:8000/docs${NC}"
-echo -e "   PostgreSQL:      ${CYAN}localhost:5432${NC}"
-echo -e "   Redis:           ${CYAN}localhost:6379${NC}"
-echo ""
-echo "Next steps:"
-echo "  1. Edit .env with your configuration"
-echo "  2. docker compose up -d  # Start services"
-echo "  3. docker compose logs -f  # View logs"
-echo "  4. docker compose down  # Stop services"
-echo ""
-echo -e "${YELLOW} Check README.md for more information${NC}"
-echo ""
+source venv/bin/activate
+pip install --upgrade pip > /dev/null 2>&1
+print_success "pip upgraded"
+
+# Backend Dependencies
+print_header "Installing Backend Dependencies"
+cd backend
+pip install -r requirements.txt
+print_success "Dependencies installed"
+
+# Database Migration
+print_header "Database Setup"
+alembic upgrade head
+print_success "Migrations completed"
+
+cd ..
+
+# Complete
+print_header "Setup Complete! "
+echo -e "${GREEN}Next steps:${NC}"
+echo -e "  1. source venv/bin/activate"
+echo -e "  2. cd backend && python run.py"
+echo -e "  3. Visit: http://localhost:8000/docs"
