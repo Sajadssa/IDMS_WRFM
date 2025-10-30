@@ -1,369 +1,256 @@
-﻿#  IDMS_WRFM - Intelligent Document Management System
+﻿# IDMS WRFM - Integrated Document Management System with Workflow & RFI Management
 
-**Workflow & RFI Management System**
+A comprehensive system for managing construction project documents, workflows, and RFI (Request for Information) processes.
 
-[![Docker](https://img.shields.io/badge/Docker-Ready-blue?logo=docker)](https://www.docker.com/)
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.115.0-green?logo=fastapi)](https://fastapi.tiangolo.com/)
-[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-blue?logo=postgresql)](https://www.postgresql.org/)
-[![Redis](https://img.shields.io/badge/Redis-7-red?logo=redis)](https://redis.io/)
-[![Python](https://img.shields.io/badge/Python-3.11+-yellow?logo=python)](https://www.python.org/)
+## 🏗️ Project Status
 
----
-
-##  Table of Contents
-- [Overview](#overview)
-- [Features](#features)
-- [Architecture](#architecture)
-- [Tech Stack](#tech-stack)
-- [Getting Started](#getting-started)
-- [Project Structure](#project-structure)
-- [Development](#development)
-- [Documentation](#documentation)
-- [Contributing](#contributing)
+**Current Phase**: Phase 2 - Backend Development (40% Complete)  
+**Last Completed**: Task 2.2 - FastAPI Structure  
+**Next Task**: Task 2.3 - Database Models
 
 ---
 
-##  Overview
+##  Completed Features
 
-IDMS_WRFM is a comprehensive Document Management System designed for managing Requests for Information (RFI) in construction and engineering projects. The system provides workflow automation, document tracking, and collaborative features.
+### Phase 0: Setup (100% Complete)
+-  Project initialization
+- ✅ Git repository setup
+- ✅ Directory structure created
 
-### Key Capabilities
-- 📝 **RFI Management**: Create, track, and manage RFIs throughout their lifecycle
-- 🔄 **Workflow Automation**: Automated routing and approval processes
--  **Multi-user Collaboration**: Role-based access control and team collaboration
--  **Analytics & Reporting**: Project insights and performance metrics
--  **Advanced Search**: Full-text search and filtering capabilities
--  **Document Storage**: Secure file upload and management
+### Phase 1: Infrastructure (100% Complete)
+- ✅ **Docker PostgreSQL** - Running on port 5432
+- ✅ **Docker Redis** - Running on port 6379
+- ✅ **Database Initialization** - idms_wrfm database created
+- ✅ **Infrastructure Verification** - All services tested and operational
+
+### Phase 2: Backend (40% Complete)
+-  **Backend Setup**
+  - Python virtual environment configured
+  - All dependencies installed (FastAPI, SQLAlchemy 2.0, etc.)
+  - Backend directory structure initialized
+
+-  **Core Configuration**
+  - Pydantic Settings implementation
+  - .env file configuration
+  - Database URL management
+  - Redis URL management
+  - JWT secret configuration
+  - Environment validation
+
+-  **FastAPI Structure**
+  - Main FastAPI application (ackend/app/main.py)
+  - API v1 router structure (ackend/app/api/v1/)
+  - Health check endpoints (basic & detailed)
+  - Placeholder endpoints (auth, projects, rfis)
+  - Custom logging middleware
+  - Database session management
+  - CORS middleware configuration
+  - Trusted hosts security
+  - Development server runner (ackend/run.py)
 
 ---
 
-##  Features
+##  Current API Endpoints
 
-### Current Implementation (Phase 1-2)
--  Docker-based infrastructure
--  PostgreSQL database with health monitoring
--  Redis caching layer
--  FastAPI backend foundation
--  Multi-stage Docker builds
--  Development and production environments
+### Root & Health
+- GET / - Root endpoint with welcome message
+- GET /health - Basic health check
 
-### Planned Features
--  User authentication and authorization (JWT)
--  RFI creation and management
--  Project management
--  File upload and processing
--  Email notifications
--  Real-time updates
--  Reporting and analytics
+### API v1
+- GET /api/v1/health/detailed - Detailed health check (includes DB connection test)
+
+### Authentication (Placeholders)
+- POST /api/v1/auth/login
+- POST /api/v1/auth/register
+- POST /api/v1/auth/logout
+- GET /api/v1/auth/me
+
+### Projects (Placeholders)
+- GET /api/v1/projects/
+- GET /api/v1/projects/{project_id}
+
+### RFIs (Placeholders)
+- GET /api/v1/rfis/
+- GET /api/v1/rfis/{rfi_id}
 
 ---
 
-##  Architecture
+## 📚 API Documentation
 
-### Docker-First Strategy
-The project follows a **Docker-First** approach:
-- All services run in Docker containers
-- Development environment mirrors production
-- Easy setup and consistent environments
-- Scalable and maintainable
-
-### System Components
-
-\\\
-
-           Load Balancer/Nginx           
-
-              
-    
-                       
-        
-Backend  Redis   
-FastAPI          Cache   
-        
-    
-
-PostgreSQL
- Database 
-
-\\\
+- **Swagger UI**: http://localhost:8000/api/docs
+- **ReDoc**: http://localhost:8000/api/redoc
+- **OpenAPI JSON**: http://localhost:8000/openapi.json
 
 ---
 
 ##  Tech Stack
 
 ### Backend
-- **Framework**: FastAPI 0.115.0
-- **Language**: Python 3.11+
-- **ORM**: SQLAlchemy 2.0.35
+- **Framework**: FastAPI 0.115.5
+- **ORM**: SQLAlchemy 2.0.36
 - **Database**: PostgreSQL 15
 - **Cache**: Redis 7
 - **Authentication**: JWT (python-jose)
-- **Password Hashing**: bcrypt
+- **Password Hashing**: passlib with bcrypt
+- **Migrations**: Alembic
+- **Validation**: Pydantic 2.10.3
 
-### DevOps & Infrastructure
-- **Containerization**: Docker & Docker Compose
-- **Migration Tool**: Alembic
-- **Web Server**: Uvicorn (ASGI)
-- **Monitoring**: Prometheus
+### Frontend (Planned)
+- Next.js 14
+- TypeScript
+- Tailwind CSS
+- shadcn/ui components
 
-### Development Tools
-- **Testing**: pytest, pytest-asyncio
-- **Code Quality**: black, flake8, mypy, isort
-- **Documentation**: mkdocs, mkdocs-material
+### Infrastructure
+- Docker & Docker Compose
+- Git version control
 
 ---
 
-##  Getting Started
+##  Installation & Setup
 
 ### Prerequisites
-- Docker Desktop (Windows/Mac) or Docker Engine (Linux)
-- Docker Compose V2
+- Python 3.11+
+- Docker Desktop
 - Git
-- 4GB RAM minimum
-- 10GB free disk space
+- Node.js 18+ (for frontend, later)
 
 ### Quick Start
 
+1. **Clone the repository**
 \\\powershell
-# 1. Clone the repository
 git clone <repository-url>
 cd IDMS_WRFM
-
-# 2. Run setup script
-./scripts/setup.sh
-
-# 3. Start services
-docker compose up -d
-
-# 4. Check health
-./scripts/health_check.sh
-
-# 5. Access the application
-# Backend API: http://localhost:8000
-# API Docs: http://localhost:8000/docs
 \\\
 
-### Environment Setup
-
-Copy the example environment file and configure:
+2. **Run setup script**
 \\\powershell
-cp .env.example .env
-# Edit .env with your settings
+.\scripts\setup.sh
 \\\
 
-**Important**: Never commit the \.env\ file!
+3. **Activate virtual environment**
+\\\powershell
+.\backend\venv\Scripts\Activate.ps1
+\\\
+
+4. **Start the backend server**
+\\\powershell
+python backend\run.py
+\\\
+
+5. **Access the API**
+- API Docs: http://localhost:8000/api/docs
+- Health Check: http://localhost:8000/health
 
 ---
 
-##  Project Structure
+## 🗂️ Project Structure
 
 \\\
 IDMS_WRFM/
- backend/                    # FastAPI backend
-    app/                   # Application code
-       api/              # API endpoints
-       core/             # Core configuration
-       models/           # Database models
-       schemas/          # Pydantic schemas
-       services/         # Business logic
-       main.py           # Application entry point
-    tests/                 # Backend tests
-    alembic/              # Database migrations
-    Dockerfile            # Production build
-    Dockerfile.dev        # Development build
-    requirements.txt      # All dependencies
-    requirements-dev.txt  # Dev dependencies
-    requirements-prod.txt # Production dependencies
-
- frontend/                  # Next.js frontend (planned)
-
- scripts/                   # Utility scripts
-    setup.sh              # Initial setup
-    health_check.sh       # Health monitoring
-    build-backend.sh      # Backend build
-    install-deps.sh       # Dependency installation
-
- docs/                      # Project documentation
-    WBS/                  # Work Breakdown Structure
-    architecture/         # Architecture diagrams
-    api/                  # API documentation
-
- .github/                   # GitHub workflows (planned)
- docker-compose.yml        # Docker services definition
- .env.example              # Environment template
- .gitignore               # Git ignore rules
- TODO.md                  # Task tracking
- README.md                # This file
+├── backend/
+│   ├── app/
+│   │   ├── main.py              # FastAPI application
+│   │   ├── config.py            # Pydantic settings
+│   │   ├── database.py          # Database configuration
+       api/
+          v1/
+              __init__.py
+              router.py    # Main v1 router
+              endpoints/   # Endpoint modules
+       models/              # SQLAlchemy models (next task)
+       schemas/             # Pydantic schemas
+       services/            # Business logic
+       middleware/          # Custom middleware
+    run.py                   # Development server
+    requirements.txt         # Python dependencies
+    venv/                    # Virtual environment
+ frontend/                    # Next.js app (planned)
+├── scripts/
+│   └── setup.sh                 # Infrastructure setup script
+ .env                         # Environment variables
+ .gitignore
+ docker-compose.yml           # PostgreSQL & Redis
+ TODO.md                      # Development checklist
+ README.md                    # This file
 \\\
 
 ---
 
-##  Development
+##  Environment Variables
 
-### Running Development Environment
+Create a .env file in the project root:
 
-\\\powershell
-# Start all services
-docker compose up -d
+\\\env
+# Database
+DATABASE_URL=postgresql://idms_user:idms_secure_password_2024@localhost:5432/idms_wrfm
 
-# View logs
-docker compose logs -f backend
+# Redis
+REDIS_URL=redis://localhost:6379/0
 
-# Run tests
-docker compose exec backend pytest
+# JWT
+SECRET_KEY=your-secret-key-here-change-in-production
+ALGORITHM=HS256
+ACCESS_TOKEN_EXPIRE_MINUTES=30
 
-# Code formatting
-docker compose exec backend black .
-
-# Type checking
-docker compose exec backend mypy .
-
-# Stop services
-docker compose down
-\\\
-
-### Database Operations
-
-\\\powershell
-# Create new migration
-docker compose exec backend alembic revision --autogenerate -m "description"
-
-# Apply migrations
-docker compose exec backend alembic upgrade head
-
-# Rollback migration
-docker compose exec backend alembic downgrade -1
-
-# View migration history
-docker compose exec backend alembic history
-\\\
-
-### Installing Dependencies
-
-\\\powershell
-# Install production dependencies
-./scripts/install-deps.sh prod
-
-# Install development dependencies
-./scripts/install-deps.sh dev
-
-# Install all dependencies
-./scripts/install-deps.sh
+# App
+PROJECT_NAME=IDMS WRFM
+VERSION=1.0.0
+DEBUG=true
 \\\
 
 ---
 
-##  Documentation
+##  Next Steps
 
-- **API Documentation**: Available at \http://localhost:8000/docs\ (Swagger UI)
-- **Alternative API Docs**: \http://localhost:8000/redoc\ (ReDoc)
-- **WBS**: See \docs/WBS/\ for detailed task breakdown
-- **Architecture**: See \docs/architecture/\ for system design
+### Immediate (Task 2.3 - Database Models)
+1. Create base model class with common fields
+2. Implement User model for authentication
+3. Implement Project model
+4. Implement RFI model with relationships
+5. Setup Alembic migrations
 
----
-
-##  Testing
-
-\\\powershell
-# Run all tests
-docker compose exec backend pytest
-
-# Run with coverage
-docker compose exec backend pytest --cov=app --cov-report=html
-
-# Run specific test file
-docker compose exec backend pytest tests/test_users.py
-
-# Run tests with output
-docker compose exec backend pytest -v -s
-\\\
+### Upcoming (Phase 2 - Backend)
+- Task 2.4: Authentication System (JWT, password hashing)
+- Task 2.5: API Endpoints (CRUD operations)
+- Task 2.6: Testing (pytest, test coverage)
 
 ---
 
-##  Security
+##  Development Notes
 
-- JWT-based authentication
-- Bcrypt password hashing
-- CORS configuration
-- Environment variable protection
-- SQL injection prevention (SQLAlchemy ORM)
-- Input validation (Pydantic)
+### Middleware Stack
+1. **Logging Middleware** - Request/response logging with timing
+2. **CORS Middleware** - Cross-origin resource sharing
+3. **Trusted Hosts** - Security for allowed hosts
 
----
+### Database Session Management
+- Dependency injection pattern
+- Automatic session cleanup
+- Connection pooling via SQLAlchemy
 
-##  Current Status
-
-### Completed (Phase 0-2.1)
--  Project initialization and Git setup
--  Docker infrastructure (Postgres, Redis)
--  Backend foundation (FastAPI)
--  Multi-stage Docker builds
--  Requirements management
--  Health checks and monitoring
-
-### In Progress (Phase 2.2)
--  Database models (User, Project, RFI)
-
-### Next Steps
-- Database connection and configuration
-- Alembic migrations
-- Authentication system
-- API endpoints
-- Frontend development
-
-**Overall Progress**: ~25% Complete
+### Error Handling
+- Custom logging for all requests
+- Detailed health checks with DB connection testing
+- Proper HTTP status codes
 
 ---
 
 ##  Contributing
 
-1. Fork the repository
-2. Create a feature branch (\git checkout -b feature/amazing-feature\)
-3. Commit your changes (\git commit -m 'Add amazing feature'\)
-4. Push to the branch (\git push origin feature/amazing-feature\)
-5. Open a Pull Request
-
-### Code Style
-- Follow PEP 8 guidelines
-- Use Black for formatting
-- Type hints required
-- Docstrings for all functions
-- Tests for new features
+1. Follow the task checklist in TODO.md
+2. Update documentation after each task
+3. Commit with descriptive messages
+4. Test all changes before committing
 
 ---
 
 ##  License
 
-This project is proprietary and confidential.
+[Your License Here]
 
 ---
 
-##  Team
-
-- **Project Lead**: [Your Name]
-- **Backend Developer**: [Name]
-- **Frontend Developer**: [Name]
-- **DevOps Engineer**: [Name]
-
----
-
-##  Support
-
-For issues and questions:
-- Create an issue on GitHub
-- Contact: [your-email@example.com]
-
----
-
-##  Acknowledgments
-
-- FastAPI framework by Sebastián Ramírez
-- SQLAlchemy ORM
-- Docker containerization
-- PostgreSQL database
-- Redis caching
-
----
-
-**Last Updated**: 2025-10-31
-**Version**: 0.2.1 (Phase 2 - Backend Foundation)
+**Last Updated**: 2025-10-31 (1404/08/09)  
+**Version**: 1.0.0  
+**Maintained By**: Sepher Pasargad Development Team

@@ -1,0 +1,24 @@
+"""
+Authentication Endpoints (Placeholder)
+"""
+from fastapi import APIRouter
+
+router = APIRouter()
+
+
+@router.post("/login")
+async def login():
+    """Login endpoint (placeholder)"""
+    return {"message": "Login endpoint - to be implemented"}
+
+
+@router.post("/register")
+async def register():
+    """Register endpoint (placeholder)"""
+    return {"message": "Register endpoint - to be implemented"}
+
+
+@router.post("/refresh")
+async def refresh_token():
+    """Refresh token endpoint (placeholder)"""
+    return {"message": "Refresh token endpoint - to be implemented"}
