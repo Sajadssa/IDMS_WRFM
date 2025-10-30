@@ -1,5 +1,3 @@
-# فایل scripts/check_setup.sh
-cat > scripts/check_setup.sh << 'EOF'
 #!/bin/bash
 
 echo "🔍 Checking IDMS_WRFM Setup..."
@@ -40,6 +38,3 @@ done
 
 echo "================================"
 echo "✅ Setup check complete!"
-EOF
-
-chmod +x scripts/check_setup.sh
