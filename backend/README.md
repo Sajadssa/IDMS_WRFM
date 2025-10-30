@@ -106,7 +106,7 @@ uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 - **Alternative Docs**: http://localhost:8000/redoc
 - **Health Check**: http://localhost:8000/api/v1/health
 
-## 📚 API Documentation
+##  API Documentation
 
 ### Authentication Endpoints
 

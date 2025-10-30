@@ -1,6 +1,6 @@
 ﻿# IDMS Development Checklist
 
-## Project Setup & Foundation ✅
+## Project Setup & Foundation 
 - [x] Initial project structure
 - [x] Database configuration
 - [x] Base models and utilities
@@ -47,7 +47,7 @@
 - [x] Generic query filters
 - [x] Pagination helpers
 
-### 2.5 Authentication System ✅
+### 2.5 Authentication System 
 **Status:** Completed  
 **Date:** 2025-10-30
 - [x] JWT authentication with access/refresh tokens
