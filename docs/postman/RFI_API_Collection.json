@@ -1,0 +1,194 @@
+﻿{
+  "info": {
+    "name": "RFI Management API",
+    "description": "Collection for testing RFI Management endpoints",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Create RFI",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"RFI_no\": \"RFI-2025-001\",\n  \"RFI_date\": \"2025-10-31\",\n  \"id_pre\": 1,\n  \"tag_no\": \"TAG-001\",\n  \"equipment_name\": \"Test Equipment\",\n  \"Applicant\": \"John Doe\",\n  \"status\": \"Pending\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/v1/rfis/",
+          "host": ["{{base_url}}"],
+          "path": ["api", "v1", "rfis", ""]
+        }
+      }
+    },
+    {
+      "name": "Get All RFIs",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{base_url}}/api/v1/rfis/?skip=0&limit=100",
+          "host": ["{{base_url}}"],
+          "path": ["api", "v1", "rfis", ""],
+          "query": [
+            {"key": "skip", "value": "0"},
+            {"key": "limit", "value": "100"}
+          ]
+        }
+      }
+    },
+    {
+      "name": "Search RFIs",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{base_url}}/api/v1/rfis/search?rfi_no=RFI-2025",
+          "host": ["{{base_url}}"],
+          "path": ["api", "v1", "rfis", "search"],
+          "query": [{"key": "rfi_no", "value": "RFI-2025"}]
+        }
+      }
+    },
+    {
+      "name": "Get Pending Inspections",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{base_url}}/api/v1/rfis/pending",
+          "host": ["{{base_url}}"],
+          "path": ["api", "v1", "rfis", "pending"]
+        }
+      }
+    },
+    {
+      "name": "Get Statistics",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{base_url}}/api/v1/rfis/statistics",
+          "host": ["{{base_url}}"],
+          "path": ["api", "v1", "rfis", "statistics"]
+        }
+      }
+    },
+    {
+      "name": "Get RFI by ID",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{base_url}}/api/v1/rfis/1",
+          "host": ["{{base_url}}"],
+          "path": ["api", "v1", "rfis", "1"]
+        }
+      }
+    },
+    {
+      "name": "Get RFI by Number",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{base_url}}/api/v1/rfis/by-rfi-no/RFI-2025-001",
+          "host": ["{{base_url}}"],
+          "path": ["api", "v1", "rfis", "by-rfi-no", "RFI-2025-001"]
+        }
+      }
+    },
+    {
+      "name": "Get RFIs by Tag",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{base_url}}/api/v1/rfis/by-tag/TAG-001",
+          "host": ["{{base_url}}"],
+          "path": ["api", "v1", "rfis", "by-tag", "TAG-001"]
+        }
+      }
+    },
+    {
+      "name": "Update RFI",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"status\": \"In Progress\",\n  \"note\": \"Updated note\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/v1/rfis/1",
+          "host": ["{{base_url}}"],
+          "path": ["api", "v1", "rfis", "1"]
+        }
+      }
+    },
+    {
+      "name": "Approve RFI",
+      "request": {
+        "method": "POST",
+        "url": {
+          "raw": "{{base_url}}/api/v1/rfis/1/approve",
+          "host": ["{{base_url}}"],
+          "path": ["api", "v1", "rfis", "1", "approve"]
+        }
+      }
+    },
+    {
+      "name": "Reject RFI",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"reason\": \"Does not meet requirements\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/v1/rfis/1/reject",
+          "host": ["{{base_url}}"],
+          "path": ["api", "v1", "rfis", "1", "reject"]
+        }
+      }
+    },
+    {
+      "name": "Cancel RFI (Superuser)",
+      "request": {
+        "method": "POST",
+        "url": {
+          "raw": "{{base_url}}/api/v1/rfis/1/cancel",
+          "host": ["{{base_url}}"],
+          "path": ["api", "v1", "rfis", "1", "cancel"]
+        }
+      }
+    },
+    {
+      "name": "Delete RFI (Superuser)",
+      "request": {
+        "method": "DELETE",
+        "url": {
+          "raw": "{{base_url}}/api/v1/rfis/1",
+          "host": ["{{base_url}}"],
+          "path": ["api", "v1", "rfis", "1"]
+        }
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000",
+      "type": "string"
+    }
+  ]
+}
